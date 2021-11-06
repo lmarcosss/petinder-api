@@ -7,12 +7,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
-public class Advert extends PanacheEntity {
+public class Announcement extends PanacheEntity {
     private double longitude;
     private double latitude;
     private String description;
@@ -20,10 +21,22 @@ public class Advert extends PanacheEntity {
     private boolean isClosed;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "announcementId")
     private List<Picture> pictures;
     
-    public Advert() {
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ownerId")
+    private User owner;
+    
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Announcement() {
         this.pictures = new ArrayList<>();
     }
 
@@ -67,11 +80,11 @@ public class Advert extends PanacheEntity {
         this.status = status;
     }
 
-    public boolean isClosed() {
+    public boolean getIsClosed() {
         return isClosed;
     }
 
-    public void setClosed(boolean isClosed) {
+    public void setIsClosed(boolean isClosed) {
         this.isClosed = isClosed;
     }
 }
