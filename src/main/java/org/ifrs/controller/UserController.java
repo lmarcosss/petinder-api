@@ -8,9 +8,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.ifrs.entity.User;
 import org.ifrs.service.UserService;
 
@@ -20,27 +20,30 @@ public class UserController {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listAll() {
-        List<User> users = userService.getAll();
-        
-        return Response.ok(users).build();
+    public List<User> listAll() {
+        return userService.getAll();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getById(@PathParam("id") Integer id) {
+        return userService.getById(id);
     }
 
     @POST
+    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
     public User create(User user) {
         return userService.create(user);
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response update(User user) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void update(User user) {
         userService.update(user);
-
-        return Response.noContent().build();
     }
 
 }

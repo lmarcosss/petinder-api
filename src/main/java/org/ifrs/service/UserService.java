@@ -11,8 +11,8 @@ public class UserService {
         return User.listAll();
     }
 
-    public User getId(Integer id) {
-        return User.findById(id);
+    public User getById(Integer userId) {
+        return User.findById(userId);
     }
 
     public void update(User user) {
@@ -23,6 +23,14 @@ public class UserService {
         }
 
         findedUser.setName(user.getName());
+        findedUser.setBirthDay(user.getBirthDay());
+        findedUser.setCpf(user.getCpf());
+        findedUser.setPhone(user.getPhone());
+        findedUser.setDescription(user.getDescription());
+        findedUser.setEmail(user.getEmail());
+        findedUser.setPassword(user.getPassword());
+
+        findedUser.persist();
     }
 
     public User create(User user) {
