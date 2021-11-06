@@ -1,21 +1,12 @@
 package org.ifrs.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
-public class User {
-    @Id @GeneratedValue private Long id;
+public class User extends PanacheEntity {
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
