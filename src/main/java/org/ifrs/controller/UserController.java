@@ -17,12 +17,6 @@ import org.ifrs.service.UserService;
 @Path("/user")
 public class UserController {
     UserService userService = new UserService();
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<User> listAll() {
-        return userService.getAll();
-    }
 
     @GET
     @Path("/{id}")

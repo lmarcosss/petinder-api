@@ -1,16 +1,10 @@
 package org.ifrs.service;
 
-import java.util.List;
-
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.User;
 
 public class UserService {
-    public List<User> getAll() {
-        return User.listAll();
-    }
-
     public User getById(Integer userId) {
         return User.findById(userId);
     }
