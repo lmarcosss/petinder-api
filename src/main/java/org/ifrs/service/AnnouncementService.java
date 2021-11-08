@@ -5,26 +5,24 @@ import java.util.List;
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.Announcement;
-import org.ifrs.entity.User;
+import org.ifrs.enums.ErrorsEnum;
 
 public class AnnouncementService {
     public List<Announcement> getAll() {
         return Announcement.listAll();
     }
      
-    public Announcement getById(Integer announcementId) {
-        return Announcement.findById(announcementId);
+    public Announcement getById(Long id) {
+        return Announcement.findById(id);
     }
 
-    public void update(Announcement announcement) {
-        Announcement findedAnnouncement = Announcement.findById(announcement.id);
+    public void update(Long id, Announcement announcement) {
+        Announcement findedAnnouncement = Announcement.findById(id);
 
         if (findedAnnouncement == null) {
-            throw new NotFoundException("Anúncio não encontrado");
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
         
-        findUser(announcement.getOwner());
-
         findedAnnouncement.setDescription(announcement.getDescription());
         findedAnnouncement.setStatus(announcement.getStatus());
         findedAnnouncement.setIsClosed(announcement.getIsClosed());
@@ -34,19 +32,19 @@ public class AnnouncementService {
     }
 
     public Announcement create(Announcement announcement) {
-        findUser(announcement.getOwner());
-
         announcement.persist();
 
         return announcement;
     }
 
-    private void findUser(User user) {
-        User findedUser = User.findById(user);
+    public void delete(Long id) {
+        Announcement findedAnnouncement = Announcement.findById(id);
 
-        if (findedUser == null) {
-            throw new NotFoundException("Usuário não encontrado");
+        if (findedAnnouncement == null) {
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         } 
+
+        findedAnnouncement.delete();
     }
 }
 

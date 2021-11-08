@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.ifrs.enums.AnnouncementStatusEnum;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -20,24 +20,13 @@ public class Announcement extends PanacheEntity {
     private String status;
     private boolean isClosed;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "announcementId")
     private List<Picture> pictures;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ownerId")
-    private User owner;
-    
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
     public Announcement() {
         this.pictures = new ArrayList<>();
+        this.status = AnnouncementStatusEnum.OPENNED.getStatus();
     }
 
     public List<Picture> getPictures() {

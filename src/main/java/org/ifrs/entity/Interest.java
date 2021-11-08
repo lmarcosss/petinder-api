@@ -14,11 +14,11 @@ public class Interest extends PanacheEntity {
     @Basic(optional = false)
     private boolean isAproved;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "interestedId")
     private User interested;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "announcementId")
     private Announcement announcement;
 
