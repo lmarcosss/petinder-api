@@ -1,17 +1,32 @@
 package org.ifrs.entity;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import org.ifrs.model.UserModel;
 
 @Entity
-public class User extends PanacheEntity {
+public class User extends BaseEntity<UserModel> {
+    @Basic(optional = false)
     private String name;
+    
+    @Basic(optional = false)
     private String birthDay;
+
+    @Basic(optional = false)
     private String cpf;
+
+    @Basic(optional = false)
     private String phone;
+
+    @Basic(optional = false)
     private String description;
+    
+    @Basic(optional = false)
     private String email;
+
+    @Basic(optional = false)
     private String password;
     
     public String getName() {
@@ -68,5 +83,16 @@ public class User extends PanacheEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public void mapFromEntity(UserModel user) {
+        this.birthDay = user.birthDay;
+        this.cpf = user.cpf;
+        this.description = user.description;
+        this.email = user.email;
+        this.name = user.name;
+        this.password = user.password;
+        this.phone = user.phone;        
     }
 }

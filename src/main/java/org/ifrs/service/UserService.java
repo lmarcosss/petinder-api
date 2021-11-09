@@ -1,35 +1,38 @@
 package org.ifrs.service;
 
+import java.util.List;
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.User;
+import org.ifrs.model.UserModel;
 
 public class UserService {
-    public User getById(Integer userId) {
+    public List<User> listAll() {
+        return User.listAll();
+    }
+
+    public User getById(Long userId) {
         return User.findById(userId);
     }
 
-    public void update(User user) {
-        User findedUser = User.findById(user.id);
+    public void update(UserModel user, Long id) {
+        User findedUser = User.findById(id);
 
         if (findedUser == null) {
             throw new NotFoundException("Usuário não encontrado");
         }
 
-        findedUser.setName(user.getName());
-        findedUser.setBirthDay(user.getBirthDay());
-        findedUser.setCpf(user.getCpf());
-        findedUser.setPhone(user.getPhone());
-        findedUser.setDescription(user.getDescription());
-        findedUser.setEmail(user.getEmail());
-        findedUser.setPassword(user.getPassword());
+        findedUser.mapFromEntity(user);
 
-        findedUser.persist();
+        User.persist(findedUser);
     }
 
-    public User create(User user) {
-        user.persist();
+    public User create(UserModel user) {
+        User newUser = new User();
 
-        return user;
+        newUser.mapFromEntity(user);
+        newUser.persist();
+
+        return newUser;
     }
 }
