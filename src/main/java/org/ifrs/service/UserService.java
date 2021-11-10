@@ -5,6 +5,7 @@ import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.User;
 import org.ifrs.model.UserModel;
+import org.ifrs.enums.ErrorsEnum;
 
 public class UserService {
     public List<User> listAll() {
@@ -19,7 +20,7 @@ public class UserService {
         User findedUser = User.findById(id);
 
         if (findedUser == null) {
-            throw new NotFoundException("Usuário não encontrado");
+            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
         }
 
         findedUser.mapFromEntity(user);

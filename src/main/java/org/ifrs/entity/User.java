@@ -28,7 +28,7 @@ public class User extends BaseEntity<UserModel> {
 
     @Basic(optional = false)
     private String password;
-    
+
     public String getName() {
         return name;
     }
