@@ -17,11 +17,7 @@ public class UserService {
     }
 
     public void update(UserModel user, Long id) {
-        User findedUser = User.findById(id);
-
-        if (findedUser == null) {
-            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
-        }
+        User findedUser = this.getById(id);
 
         findedUser.mapFromEntity(user);
 
@@ -32,7 +28,7 @@ public class UserService {
         User newUser = new User();
 
         newUser.mapFromEntity(user);
-        newUser.persist();
+        User.persist(newUser);
 
         return newUser;
     }

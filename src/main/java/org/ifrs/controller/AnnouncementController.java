@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.ifrs.entity.Announcement;
+import org.ifrs.model.AnnouncementModel;
 import org.ifrs.service.AnnouncementService;
 
 @Path("/announcement")
@@ -37,7 +38,7 @@ public class AnnouncementController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Announcement create(Announcement announcement) {
+    public Announcement create(AnnouncementModel announcement) {
         return announcementService.create(announcement);
     }
 
@@ -45,7 +46,7 @@ public class AnnouncementController {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public void update(@PathParam("id") Long id, Announcement announcement) {
+    public void update(@PathParam("id") Long id, AnnouncementModel announcement) {
         announcementService.update(id, announcement);
     }
 

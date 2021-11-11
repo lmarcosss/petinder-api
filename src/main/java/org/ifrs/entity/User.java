@@ -1,10 +1,15 @@
 package org.ifrs.entity;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 import org.ifrs.model.UserModel;
+
 
 @Entity
 public class User extends BaseEntity<UserModel> {
@@ -28,6 +33,16 @@ public class User extends BaseEntity<UserModel> {
 
     @Basic(optional = false)
     private String password;
+
+    @Basic(optional = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private List<Announcement> announcements;
+
+    @Basic(optional = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "interestedId")
+    private List<Interest> interests;
 
     public String getName() {
         return name;
