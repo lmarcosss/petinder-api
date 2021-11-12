@@ -2,7 +2,7 @@ package org.ifrs.model;
 
 import javax.validation.constraints.NotNull;
 
-public class interestModel {
+public class InterestModel {
     @NotNull(message = "Campo interestedId é obrigatório")
     public Long interestedId;
     

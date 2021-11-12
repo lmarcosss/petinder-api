@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.ifrs.enums.AnnouncementStatusEnum;
 import org.ifrs.model.AnnouncementModel;
 
@@ -33,13 +35,14 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
     private boolean isClosed;
     
     @Basic(optional = false)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "announcementId")
     private List<Picture> pictures;
 
     @Basic(optional = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "interestedId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "announcementId")
+    @JsonBackReference
     private List<Interest> interests;
 
     @Basic(optional = false)

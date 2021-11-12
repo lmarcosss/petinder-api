@@ -9,7 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.ifrs.entity.Interest;
-import org.ifrs.model.interestModel;
+import org.ifrs.model.InterestModel;
 import org.ifrs.service.InterestService;
 
 @Path("/interest")
@@ -27,7 +27,7 @@ public class InterestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Interest create(interestModel interest) {
+    public Interest create(InterestModel interest) {
         return interestService.create(interest);
     }
 }

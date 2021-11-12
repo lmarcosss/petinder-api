@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.ifrs.model.interestModel;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import org.ifrs.model.InterestModel;
 
 @Entity
-public class Interest extends BaseEntity<interestModel> {
+public class Interest extends BaseEntity<InterestModel> {
     @Basic(optional = false)
     private boolean isAproved;
 
@@ -21,8 +23,9 @@ public class Interest extends BaseEntity<interestModel> {
     @Basic(optional = false)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "announcementId")
+    @JsonManagedReference
     private Announcement announcement;
-
+    
     public Interest() {
         this.isAproved = false;
     }
@@ -52,5 +55,5 @@ public class Interest extends BaseEntity<interestModel> {
     }
 
     @Override
-    public void mapFromEntity(interestModel model) {}
+    public void mapFromEntity(InterestModel model) {}
 }

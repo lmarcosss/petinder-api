@@ -6,7 +6,7 @@ import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
 import org.ifrs.entity.User;
 import org.ifrs.enums.ErrorsEnum;
-import org.ifrs.model.interestModel;
+import org.ifrs.model.InterestModel;
 
 public class InterestService {
     UserService userService = new UserService();
@@ -16,7 +16,7 @@ public class InterestService {
         return Interest.findById(userId);
     }
 
-    public Interest create(interestModel interest) {
+    public Interest create(InterestModel interest) {
         User findedUser = User.findById(interest.interestedId);
 
         if (findedUser == null) {
