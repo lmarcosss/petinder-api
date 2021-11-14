@@ -1,5 +1,8 @@
 package org.ifrs.service;
 
+import java.util.List;
+
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.Announcement;
@@ -29,6 +32,10 @@ public class InterestService {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
 
+        if (findedAnnouncement.getOwner() == findedUser) {
+            throw new BadRequestException(ErrorsEnum.INTEREST_BAD_REQUEST.getError());
+        }
+
         Interest newInterest = new Interest();
 
         newInterest.setInterested(findedUser);
@@ -38,5 +45,11 @@ public class InterestService {
         Interest.persist(newInterest);
 
         return newInterest;
+    }
+
+    public List<Interest> getInterestsByAnnouncement(Long id) {
+        List<Interest> interests = Interest.find("announcementId", id).list();
+
+        return interests;
     }
 }

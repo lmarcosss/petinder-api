@@ -14,10 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.ifrs.entity.Announcement;
+import org.ifrs.entity.Interest;
 import org.ifrs.model.AnnouncementModel;
 import org.ifrs.service.AnnouncementService;
 
-@Path("/announcement")
+@Path("announcement")
 public class AnnouncementController {
     AnnouncementService announcementService = new AnnouncementService();
     
@@ -28,7 +29,7 @@ public class AnnouncementController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Announcement getById(@PathParam("id") Long id) {
         return announcementService.getById(id);
@@ -43,7 +44,7 @@ public class AnnouncementController {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public void update(@PathParam("id") Long id, AnnouncementModel announcement) {
@@ -51,11 +52,17 @@ public class AnnouncementController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public void update(@PathParam("id") Long id) {
         announcementService.delete(id);
     }
 
+    @GET
+    @Path("user/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Announcement> getUserAnnouncements(@PathParam("userId") Long userId) {
+        return announcementService.getUserAnnouncements(userId);
+    }
 }

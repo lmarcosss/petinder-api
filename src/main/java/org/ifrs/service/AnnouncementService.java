@@ -24,11 +24,9 @@ public class AnnouncementService {
         if (findedAnnouncement == null) {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
+
+        findedAnnouncement.mapFromEntity(announcement);
         
-        // findedAnnouncement.setDescription(announcement.getDescription());
-        // findedAnnouncement.setStatus(announcement.getStatus());
-        // findedAnnouncement.setIsClosed(announcement.getIsClosed());
-        // findedAnnouncement.setPictures(announcement.getPictures());
 
         findedAnnouncement.persist();
     }
@@ -57,6 +55,18 @@ public class AnnouncementService {
         } 
 
         findedAnnouncement.delete();
+    }
+
+    public List<Announcement> getUserAnnouncements(Long userId) {
+        User findedUser = User.findById(userId);
+
+        if (findedUser == null) {
+            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
+        }
+
+        List<Announcement> announcements = Announcement.find("owner", findedUser).list();
+
+        return announcements;
     }
 }
 

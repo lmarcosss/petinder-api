@@ -16,7 +16,7 @@ import org.ifrs.entity.User;
 import org.ifrs.model.UserModel;
 import org.ifrs.service.UserService;
 
-@Path("/user")
+@Path("user")
 public class UserController {
     UserService userService = new UserService();
 

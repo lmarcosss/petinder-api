@@ -1,5 +1,7 @@
 package org.ifrs.controller;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,7 +14,7 @@ import org.ifrs.entity.Interest;
 import org.ifrs.model.InterestModel;
 import org.ifrs.service.InterestService;
 
-@Path("/interest")
+@Path("interest")
 public class InterestController {
     InterestService interestService = new InterestService();
     
@@ -29,5 +31,12 @@ public class InterestController {
     @Transactional
     public Interest create(InterestModel interest) {
         return interestService.create(interest);
+    }
+
+    @GET
+    @Path("announcement/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Interest> getInterestsByAnnouncement(@PathParam("id") Long id) {
+        return interestService.getInterestsByAnnouncement(id);
     }
 }
