@@ -3,6 +3,7 @@ package org.ifrs.service;
 import java.util.List;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.Announcement;
@@ -19,7 +20,7 @@ public class InterestService {
         return Interest.findById(userId);
     }
 
-    public Interest create(InterestModel interest) {
+    public Interest create(InterestModel interest) throws ClientErrorException {
         User findedUser = User.findById(interest.interestedId);
 
         if (findedUser == null) {

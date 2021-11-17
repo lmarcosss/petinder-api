@@ -1,11 +1,9 @@
 package org.ifrs.service;
 
 import java.util.List;
-import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.User;
 import org.ifrs.model.UserModel;
-import org.ifrs.enums.ErrorsEnum;
 
 public class UserService {
     public List<User> listAll() {
