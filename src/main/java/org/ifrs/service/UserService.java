@@ -2,6 +2,8 @@ package org.ifrs.service;
 
 import java.util.List;
 
+import javax.ws.rs.NotFoundException;
+
 import org.ifrs.entity.User;
 import org.ifrs.model.UserModel;
 
@@ -11,7 +13,13 @@ public class UserService {
     }
 
     public User getById(Long userId) {
-        return User.findById(userId);
+        User findedUser = User.findById(userId);
+
+        if (findedUser == null) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+
+        return findedUser;
     }
 
     public void update(UserModel user, Long id) {

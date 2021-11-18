@@ -3,10 +3,8 @@ package org.ifrs.entity;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-
 @Entity
-public class Picture extends PanacheEntity {
+public class Picture extends BaseEntity<Object> {
     @Basic(optional = false)
     private String url;
 
@@ -23,4 +21,7 @@ public class Picture extends PanacheEntity {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public void mapFromEntity(Object model) {}
 }

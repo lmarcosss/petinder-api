@@ -8,12 +8,13 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import org.ifrs.enums.InterestStatusEnum;
 import org.ifrs.model.InterestModel;
 
 @Entity
 public class Interest extends BaseEntity<InterestModel> {
     @Basic(optional = false)
-    private boolean isAproved;
+    private String status;
 
     @Basic(optional = false)
     @ManyToOne(cascade = CascadeType.ALL)
@@ -25,19 +26,11 @@ public class Interest extends BaseEntity<InterestModel> {
     @JoinColumn(name = "announcementId")
     @JsonManagedReference
     private Announcement announcement;
-    
+
     public Interest() {
-        this.isAproved = false;
+        this.status = InterestStatusEnum.OPENNED.getStatus();
     }
-
-    public boolean isAproved() {
-        return isAproved;
-    }
-
-    public void setAproved(boolean isAproved) {
-        this.isAproved = isAproved;
-    }
-
+    
     public User getInterested() {
         return interested;
     }
@@ -46,12 +39,21 @@ public class Interest extends BaseEntity<InterestModel> {
         this.interested = interested;
     }
 
+
     public Announcement getAnnouncement() {
         return announcement;
     }
 
     public void setAnnouncement(Announcement announcement) {
         this.announcement = announcement;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

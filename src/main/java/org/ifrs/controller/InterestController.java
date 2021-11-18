@@ -1,7 +1,5 @@
 package org.ifrs.controller;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -13,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.ifrs.entity.Error;
-import org.ifrs.entity.Interest;
 import org.ifrs.model.InterestModel;
 import org.ifrs.service.InterestService;
 
@@ -24,8 +21,13 @@ public class InterestController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Interest getById(@PathParam("id") Long id) {
-        return interestService.getById(id);
+    public Response getById(@PathParam("id") Long id) {
+        try {
+            return Response.ok(interestService.getById(id)).build();
+            
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
     }
 
     @POST
@@ -41,11 +43,51 @@ public class InterestController {
     }
 
     @GET
-    @Path("announcement/{id}")
+    @Path("announcement/{announcementId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getInterestsByAnnouncement(@PathParam("id") Long id) {
+    public Response getInterestsByAnnouncement(@PathParam("announcementId") Long announcementId) {
         try {
-            return Response.ok(interestService.getInterestsByAnnouncement(id)).build();
+            return Response.ok(interestService.getInterestsByAnnouncement(announcementId)).build();
+            
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
+    }
+
+    
+    @GET
+    @Path("user/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserInterestAnnouncements(@PathParam("userId") Long userId) {
+        try {
+            return Response.ok(interestService.getUserInterests(userId)).build();
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
+    }
+
+    @POST
+    @Path("{id}/decline")
+    @Transactional
+    public Response declineInterestByAnnoucement(@PathParam("id") Long id) {
+        try {
+            interestService.declineInterestByAnnoucement(id);
+            
+            return Response.noContent().build();
+            
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
+    }
+
+    @POST
+    @Path("{id}/accept")
+    @Transactional
+    public Response acceptInterestByAnnoucement(@PathParam("id") Long id) {
+        try {
+            interestService.acceptInterestByAnnoucement(id);
+            
+            return Response.noContent().build();
             
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);

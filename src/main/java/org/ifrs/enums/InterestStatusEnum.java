@@ -1,13 +1,13 @@
 package org.ifrs.enums;
 
-public enum AnnouncementStatusEnum {
+public enum InterestStatusEnum {
     OPENNED("ABERTO"),
-    CANCELED("CANCELADO"),
-    ADOPTED("ADOTADO");
+    ACCEPTED("ACEITO"),
+    DECLINED("NÃO ACEITO");
 
     private String status;
 
-    AnnouncementStatusEnum(String status) {
+    InterestStatusEnum(String status) {
         this.status = status;
     }
 
