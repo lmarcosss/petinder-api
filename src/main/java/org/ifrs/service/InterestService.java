@@ -74,7 +74,7 @@ public class InterestService {
     public void acceptInterestByAnnoucement(Long id) {
         Interest findedInterest = this.getById(id);
 
-        this.verifyStatusIsNotOpenned(findedInterest.getStatus());
+        this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
         findedInterest.setStatus(InterestStatusEnum.ACCEPTED.getStatus());
 
@@ -84,14 +84,14 @@ public class InterestService {
     public void declineInterestByAnnoucement(Long id) {
         Interest findedInterest = this.getById(id);
 
-        this.verifyStatusIsNotOpenned(findedInterest.getStatus());
+        this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
         findedInterest.setStatus(InterestStatusEnum.DECLINED.getStatus());
 
         Interest.persist(findedInterest);
     }
 
-    private void verifyStatusIsNotOpenned(String status) {
+    private void verifyStatusIfNotOpenned(String status) {
         if (!status.equals(InterestStatusEnum.OPENNED.getStatus())) {
             throw new BadRequestException(ErrorsEnum.INTEREST_STATUS_BAD_REQUEST.getError());
         }
