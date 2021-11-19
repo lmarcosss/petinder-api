@@ -1,6 +1,7 @@
 package org.ifrs.controller;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -34,7 +35,7 @@ public class InterestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response create(InterestModel interest) {
+    public Response create(@Valid InterestModel interest) {
         try {
             return Response.ok(interestService.create(interest)).build();
         } catch (ClientErrorException e) {

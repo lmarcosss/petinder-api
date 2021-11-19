@@ -1,6 +1,7 @@
 package org.ifrs.controller;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -46,7 +47,7 @@ public class AnnouncementController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response create(AnnouncementModel announcement) {
+    public Response create(@Valid AnnouncementModel announcement) {
         try {
             return Response.ok(announcementService.create(announcement)).build();
         } catch (ClientErrorException e) {
@@ -58,7 +59,7 @@ public class AnnouncementController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response update(@PathParam("id") Long id, AnnouncementModel announcement) {
+    public Response update(@PathParam("id") Long id, @Valid AnnouncementModel announcement) {
         try {
             announcementService.update(id, announcement);
 

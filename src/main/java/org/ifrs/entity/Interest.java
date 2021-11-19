@@ -17,12 +17,12 @@ public class Interest extends BaseEntity<InterestModel> {
     private String status;
 
     @Basic(optional = false)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "interestedId")
     private User interested;
 
     @Basic(optional = false)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "announcementId")
     @JsonManagedReference
     private Announcement announcement;

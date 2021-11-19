@@ -46,7 +46,7 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
     private List<Interest> interests;
 
     @Basic(optional = false)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ownerId")
     private User owner;
 
