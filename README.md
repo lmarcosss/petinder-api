@@ -7,8 +7,6 @@ Projeto para as cadeiras de PW2 e Engenharia de Software 2.
 docker-compose up -d
 ```
 
-### Modifique em `src/main/resources/application.properties` para utilizar as variáveis de dev! (OBS: Lembrar de não commitar)
-
 ### Depois para rodar o projeto utilize o comando:
 ```shell script
 mvn quarkus:dev
