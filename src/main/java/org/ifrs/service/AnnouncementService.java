@@ -5,14 +5,11 @@ import java.util.List;
 import javax.ws.rs.NotFoundException;
 
 import org.ifrs.entity.Announcement;
-import org.ifrs.entity.User;
 import org.ifrs.enums.AnnouncementStatusEnum;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.model.AnnouncementModel;
 
 public class AnnouncementService {
-    UserService userService = new UserService();
-
     public List<Announcement> getAll() {
         return Announcement.listAll();
     }
@@ -36,12 +33,12 @@ public class AnnouncementService {
     }
 
     public Announcement create(AnnouncementModel announcementModel) {
-       User findedUser = userService.getById(announcementModel.userId);
+    //    userService.getById(announcementModel.userId);
 
        Announcement newAnnouncement = new Announcement();
-       newAnnouncement.setOwner(findedUser);
+       
        newAnnouncement.mapFromEntity(announcementModel);
-
+       
        Announcement.persist(newAnnouncement);
 
        return newAnnouncement;
@@ -54,9 +51,7 @@ public class AnnouncementService {
     }
 
     public List<Announcement> getUserAnnouncements(Long userId) {
-        User findedUser = userService.getById(userId);
-
-        List<Announcement> announcements = Announcement.find("owner", findedUser).list();
+        List<Announcement> announcements = Announcement.find("ownerId", userId).list();
 
         return announcements;
     }

@@ -4,16 +4,14 @@ import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
-
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
-import org.ifrs.entity.User;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.enums.InterestStatusEnum;
 import org.ifrs.model.InterestModel;
 
 public class InterestService {
-    UserService userService = new UserService();
+    // UserService userService = new UserService();
     AnnouncementService announcementService = new AnnouncementService();
 
     public Interest getById(Long userId) {
@@ -27,16 +25,16 @@ public class InterestService {
     }
 
     public Interest create(InterestModel interest) {
-        User findedUser = userService.getById(interest.interestedId);
+        // User findedUser = userService.getById(interest.interestedId);
         Announcement findedAnnouncement = announcementService.getById(interest.announcementId);
 
-        if (findedAnnouncement.getOwner() == findedUser) {
-            throw new BadRequestException(ErrorsEnum.INTEREST_ANNOUNCEMENT_BAD_REQUEST.getError());
-        }
+        // if (findedAnnouncement.getOwner() == findedUser) {
+        //     throw new BadRequestException(ErrorsEnum.INTEREST_ANNOUNCEMENT_BAD_REQUEST.getError());
+        // }
 
         Interest findedInterest = Interest.find(
             "interestedId = ?1 and announcementId = ?2",
-            findedUser.getId(),
+            interest.interestedId,
             findedAnnouncement.getId()
         ).firstResult();
 
@@ -46,7 +44,7 @@ public class InterestService {
         
         Interest newInterest = new Interest();
 
-        newInterest.setInterested(findedUser);
+        newInterest.setInterestedId(interest.interestedId);
 
         newInterest.setAnnouncement(findedAnnouncement);
 
@@ -64,9 +62,9 @@ public class InterestService {
     }
 
     public List<Interest> getUserInterests(Long userId) {
-        User findedUser = userService.getById(userId);
+        // User findedUser = userService.getById(userId);
 
-        List<Interest> interests = Interest.find("interested", findedUser).list();
+        List<Interest> interests = Interest.find("interestedId", userId).list();
 
         return interests;
     }

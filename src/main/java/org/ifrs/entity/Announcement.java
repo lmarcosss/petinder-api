@@ -46,9 +46,7 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
     private List<Interest> interests;
 
     @Basic(optional = false)
-    @ManyToOne
-    @JoinColumn(name = "ownerId")
-    private User owner;
+    private Long ownerId;
 
     public Announcement() {
         this.pictures = new ArrayList<>();
@@ -104,12 +102,12 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
         this.interests = interests;
     }
 
-    public User getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public boolean isClosed() {
@@ -125,6 +123,7 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
         this.description = model.description;
         this.latitude = model.latitude;
         this.longitude = model.longitude;
+        this.ownerId = model.userId;
         this.pictures = model.pictures.stream().map(url -> new Picture(url)).collect(Collectors.toList());
     }
 }

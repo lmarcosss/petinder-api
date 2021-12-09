@@ -4,6 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 public class UserModel {
+    @NotNull(message = "Campo id é obrigatório")
+    public String id;
+    
     @NotNull(message = "Campo nome é obrigatório")
     public String name;
 
@@ -25,5 +28,4 @@ public class UserModel {
 
     @NotNull(message = "Campo senha é obrigatório")
     public String password;
-
 }

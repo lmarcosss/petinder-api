@@ -1,7 +1,6 @@
 package org.ifrs.entity;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,9 +16,7 @@ public class Interest extends BaseEntity<InterestModel> {
     private String status;
 
     @Basic(optional = false)
-    @ManyToOne
-    @JoinColumn(name = "interestedId")
-    private User interested;
+    private Long interestedId;
 
     @Basic(optional = false)
     @ManyToOne
@@ -31,12 +28,12 @@ public class Interest extends BaseEntity<InterestModel> {
         this.status = InterestStatusEnum.OPENNED.getStatus();
     }
     
-    public User getInterested() {
-        return interested;
+    public Long getInterestedId() {
+        return interestedId;
     }
 
-    public void setInterested(User interested) {
-        this.interested = interested;
+    public void setInterestedId(Long interestedId) {
+        this.interestedId = interestedId;
     }
 
 
