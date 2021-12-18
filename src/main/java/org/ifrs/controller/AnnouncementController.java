@@ -14,13 +14,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import javax.inject.Inject;
+
+import org.ifrs.client.UserClient;
 import org.ifrs.entity.Error;
 import org.ifrs.model.AnnouncementModel;
 import org.ifrs.service.AnnouncementService;
+import org.ifrs.view.UserView;
 
 @Path("announcement")
 public class AnnouncementController {
     AnnouncementService announcementService = new AnnouncementService();
+    
+    @Inject
+    @RestClient
+    UserClient userService;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +91,15 @@ public class AnnouncementController {
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);
         }
+    }
+
+    @GET
+    @Path("/hello/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserView getUser(@PathParam("id") Long id) {
+        UserView user = userService.getById(id);
+        
+        return user;
     }
 
     @GET

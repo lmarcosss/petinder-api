@@ -9,7 +9,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -24,6 +23,9 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
     
     @Basic(optional = false)
     private double latitude;
+
+    @Basic(optional = false)
+    private String title;
     
     @Basic(optional = false)
     private String description;
@@ -78,6 +80,14 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
         this.latitude = latitude;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -116,14 +126,5 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
 
     public void setClosed(boolean isClosed) {
         this.isClosed = isClosed;
-    }
-
-    @Override
-    public void mapFromEntity(AnnouncementModel model) {
-        this.description = model.description;
-        this.latitude = model.latitude;
-        this.longitude = model.longitude;
-        this.ownerId = model.userId;
-        this.pictures = model.pictures.stream().map(url -> new Picture(url)).collect(Collectors.toList());
     }
 }

@@ -19,6 +19,4 @@ public abstract class BaseEntity<T> extends PanacheEntityBase {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public abstract void mapFromEntity(T model); 
 }

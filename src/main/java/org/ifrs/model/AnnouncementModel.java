@@ -10,6 +10,9 @@ public class AnnouncementModel {
     @NotNull(message = "Campo longitude é obrigatório")
     public Double longitude;
 
+    @NotNull(message = "Campo title é obrigatório")
+    public String title;
+
     @NotNull(message = "Campo description é obrigatório")
     public String description;
 

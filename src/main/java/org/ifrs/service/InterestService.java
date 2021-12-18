@@ -4,29 +4,46 @@ import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+
+import org.ifrs.adapter.InterestAdapter;
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.enums.InterestStatusEnum;
 import org.ifrs.model.InterestModel;
+import org.ifrs.view.InterestView;
 
 public class InterestService {
-    // UserService userService = new UserService();
     AnnouncementService announcementService = new AnnouncementService();
 
-    public Interest getById(Long userId) {
-        Interest findedInterest = Interest.findById(userId);
+    private InterestView formatAnnouncement(Interest interest) {
+        InterestAdapter adapter = new InterestAdapter(interest);
+        
+        return adapter.mapEntityToView();
+    }
+
+    private List<InterestView> formatInterests(List<Interest> interests) {
+        return interests.stream().map(interest -> formatAnnouncement(interest)).toList();
+    }
+
+    public InterestView getById(Long id) {
+        Interest findedInterest = Interest.findById(id);
 
         if (findedInterest == null) {
             throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
         }
 
-        return findedInterest;
+        InterestView interestFormatted = formatAnnouncement(findedInterest);
+
+        return interestFormatted;
     }
 
     public Interest create(InterestModel interest) {
-        // User findedUser = userService.getById(interest.interestedId);
-        Announcement findedAnnouncement = announcementService.getById(interest.announcementId);
+        Announcement findedAnnouncement = Announcement.findById(interest.announcementId);
+
+        if (findedAnnouncement == null) {
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
+        }
 
         // if (findedAnnouncement.getOwner() == findedUser) {
         //     throw new BadRequestException(ErrorsEnum.INTEREST_ANNOUNCEMENT_BAD_REQUEST.getError());
@@ -44,33 +61,39 @@ public class InterestService {
         
         Interest newInterest = new Interest();
 
-        newInterest.setInterestedId(interest.interestedId);
-
         newInterest.setAnnouncement(findedAnnouncement);
 
-        Interest.persist(newInterest);
+        InterestAdapter adapter = new InterestAdapter(newInterest);
 
-        return newInterest;
+        Interest.persist(adapter.getInterest());
+
+        return adapter.getInterest();
     }
 
-    public List<Interest> getInterestsByAnnouncement(Long announcementId) {
-        Announcement findedAnnouncement = announcementService.getById(announcementId);
+    public List<InterestView> getInterestsByAnnouncement(Long announcementId) {
+        Announcement findedAnnouncement = Announcement.findById(announcementId);
+
+        if (findedAnnouncement == null) {
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
+        }
 
         List<Interest> interests = Interest.find("announcement", findedAnnouncement).list();
 
-        return interests;
+        return formatInterests(interests);
     }
 
     public List<Interest> getUserInterests(Long userId) {
-        // User findedUser = userService.getById(userId);
-
         List<Interest> interests = Interest.find("interestedId", userId).list();
 
         return interests;
     }
 
     public void acceptInterestByAnnoucement(Long id) {
-        Interest findedInterest = this.getById(id);
+        Interest findedInterest = Interest.findById(id);
+
+        if (findedInterest == null) {
+            throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
+        }
 
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
@@ -80,7 +103,11 @@ public class InterestService {
     }
 
     public void declineInterestByAnnoucement(Long id) {
-        Interest findedInterest = this.getById(id);
+        Interest findedInterest = Interest.findById(id);
+
+        if (findedInterest == null) {
+            throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
+        }
 
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
