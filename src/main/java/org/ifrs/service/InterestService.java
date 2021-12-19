@@ -1,6 +1,7 @@
 package org.ifrs.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
@@ -23,7 +24,7 @@ public class InterestService {
     }
 
     private List<InterestView> formatInterests(List<Interest> interests) {
-        return interests.stream().map(interest -> formatAnnouncement(interest)).toList();
+        return interests.stream().map(interest -> formatAnnouncement(interest)).collect(Collectors.toList());
     }
 
     public InterestView getById(Long id) {

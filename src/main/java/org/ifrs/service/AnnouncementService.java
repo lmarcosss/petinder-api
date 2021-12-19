@@ -1,6 +1,7 @@
 package org.ifrs.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.NotFoundException;
 
@@ -28,7 +29,7 @@ public class AnnouncementService {
     }
 
     private List<AnnouncementView> formatAnnouncements(List<Announcement> announcements) {
-        return announcements.stream().map(announcement -> formatAnnouncement(announcement)).toList();
+        return announcements.stream().map(announcement -> formatAnnouncement(announcement)).collect(Collectors.toList());
     }
     
     public List<AnnouncementView> getAll() {
