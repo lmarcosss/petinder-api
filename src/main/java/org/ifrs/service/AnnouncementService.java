@@ -27,14 +27,14 @@ public class AnnouncementService {
         return adapter.mapEntityToView();
     }
 
-    private List<AnnouncementView> formatAnnouncementList(List<Announcement> announcements) {
+    private List<AnnouncementView> formatAnnouncements(List<Announcement> announcements) {
         return announcements.stream().map(announcement -> formatAnnouncement(announcement)).toList();
     }
     
     public List<AnnouncementView> getAll() {
         List<Announcement> announcements = Announcement.listAll();
         
-        return formatAnnouncementList(announcements);
+        return formatAnnouncements(announcements);
     }
      
     public AnnouncementView getById(Long id) {
@@ -98,7 +98,7 @@ public class AnnouncementService {
     public List<AnnouncementView> getUserAnnouncements(Long userId) {
         List<Announcement> announcements = Announcement.find("ownerId", userId).list();
 
-        return formatAnnouncementList(announcements);
+        return formatAnnouncements(announcements);
     }
 
     public void cancelAnnouncement(Long id) {
