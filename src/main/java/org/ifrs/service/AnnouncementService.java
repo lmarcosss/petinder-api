@@ -26,7 +26,9 @@ public class AnnouncementService {
     UserClient userService;
 
     private AnnouncementView formatAnnouncement(Announcement announcement) {
-        AnnouncementAdapter adapter = new AnnouncementAdapter(announcement);
+        UserView owner = userService.getById(announcement.getOwnerId());
+
+        AnnouncementAdapter adapter = new AnnouncementAdapter(announcement, owner);
         
         return adapter.mapEntityToView();
     }
@@ -74,17 +76,21 @@ public class AnnouncementService {
     }
 
     public AnnouncementView create(AnnouncementModel announcementModel) {
-    //    userService.getById(announcementModel.userId);
+        UserView owner = userService.getById(announcementModel.userId);
 
-       Announcement newAnnouncement = new Announcement();
+        if (owner == null) {
+            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
+        }
 
-       AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement);
+        Announcement newAnnouncement = new Announcement();
 
-       adapter.mapModelToEntity(announcementModel);
-       
-       Announcement.persist(adapter.getAnnouncement());
+        AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement);
 
-       return adapter.mapEntityToView();
+        adapter.mapModelToEntity(announcementModel);
+        
+        Announcement.persist(adapter.getAnnouncement());
+
+        return adapter.mapEntityToView();
     }
 
     public void delete(Long id) {
