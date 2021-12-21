@@ -37,8 +37,8 @@ public class AnnouncementService {
         return announcements.stream().map(announcement -> formatAnnouncement(announcement)).collect(Collectors.toList());
     }
     
-    public List<AnnouncementView> getAll() {
-        List<Announcement> announcements = Announcement.listAll();
+    public List<AnnouncementView> getAllOpenned() {
+        List<Announcement> announcements = Announcement.find("status", AnnouncementStatusEnum.OPENNED.getStatus()).list();
         
         return formatAnnouncements(announcements);
     }
@@ -68,7 +68,13 @@ public class AnnouncementService {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
 
-        AnnouncementAdapter adapter = new AnnouncementAdapter(findedAnnouncement);
+        UserView owner = userService.getById(announcement.userId);
+
+        if (owner == null) {
+            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
+        }
+
+        AnnouncementAdapter adapter = new AnnouncementAdapter(findedAnnouncement, owner);
 
         adapter.mapModelToEntity(announcement);
 
@@ -84,7 +90,7 @@ public class AnnouncementService {
 
         Announcement newAnnouncement = new Announcement();
 
-        AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement);
+        AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement, owner);
 
         adapter.mapModelToEntity(announcementModel);
         

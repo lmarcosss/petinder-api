@@ -17,10 +17,6 @@ public class AnnouncementAdapter {
         this.owner = owner;
     }
 
-    public AnnouncementAdapter(Announcement announcement) {
-        this.announcement = announcement;
-    }
-
     public AnnouncementView mapEntityToView() {
         AnnouncementView announcementView = new AnnouncementView();
 

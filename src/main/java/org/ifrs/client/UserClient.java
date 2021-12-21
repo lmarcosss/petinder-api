@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.ifrs.view.UserView;
 
-@RegisterRestClient(baseUri = "https://api-auth-petinder.herokuapp.com/user")
+@RegisterRestClient(configKey="user-api")
 public interface UserClient {
 
     @GET

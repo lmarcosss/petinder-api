@@ -28,15 +28,11 @@ public class AnnouncementController {
     @Inject
     AnnouncementService announcementService;
     
-    @Inject
-    @RestClient
-    UserClient userService;
-    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAll() {
         try {
-            return Response.ok(announcementService.getAll()).build();
+            return Response.ok(announcementService.getAllOpenned()).build();
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);
         }
@@ -91,15 +87,6 @@ public class AnnouncementController {
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);
         }
-    }
-
-    @GET
-    @Path("/hello/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public UserView getUser(@PathParam("id") Long id) {
-        UserView user = userService.getById(id);
-        
-        return user;
     }
 
     @GET
