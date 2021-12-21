@@ -3,6 +3,8 @@ package org.ifrs.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
@@ -14,8 +16,10 @@ import org.ifrs.enums.InterestStatusEnum;
 import org.ifrs.model.InterestModel;
 import org.ifrs.view.InterestView;
 
+@Singleton
 public class InterestService {
-    AnnouncementService announcementService = new AnnouncementService();
+    @Inject
+    AnnouncementService announcementService;
 
     private InterestView formatAnnouncement(Interest interest) {
         InterestAdapter adapter = new InterestAdapter(interest);

@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import javax.ws.rs.NotFoundException;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.ifrs.adapter.AnnouncementAdapter;
 import org.ifrs.client.UserClient;
@@ -17,6 +19,7 @@ import org.ifrs.model.AnnouncementModel;
 import org.ifrs.view.AnnouncementView;
 import org.ifrs.view.UserView;
 
+@Singleton
 public class AnnouncementService {
     @Inject
     @RestClient
@@ -45,7 +48,7 @@ public class AnnouncementService {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
 
-        UserView owner = userService.getById(id);
+        UserView owner = userService.getById(findedAnnouncement.getOwnerId());
 
         if (owner == null) {
             throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
@@ -53,9 +56,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter announcement = new AnnouncementAdapter(findedAnnouncement, owner);
 
-        AnnouncementView announcementFormatted = announcement.mapEntityToView();
-
-        return announcementFormatted;
+        return announcement.mapEntityToView();
     }
 
     public void update(Long id, AnnouncementModel announcement) {

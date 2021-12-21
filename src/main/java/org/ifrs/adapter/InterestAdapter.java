@@ -2,7 +2,6 @@ package org.ifrs.adapter;
 
 import javax.ws.rs.core.Response;
 
-import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
 import org.ifrs.model.InterestModel;
 import org.ifrs.view.InterestView;

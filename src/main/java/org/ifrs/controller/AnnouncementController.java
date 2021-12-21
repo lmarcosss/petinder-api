@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-
 import javax.inject.Inject;
 
 import org.ifrs.client.UserClient;
@@ -26,7 +25,8 @@ import org.ifrs.view.UserView;
 
 @Path("announcement")
 public class AnnouncementController {
-    AnnouncementService announcementService = new AnnouncementService();
+    @Inject
+    AnnouncementService announcementService;
     
     @Inject
     @RestClient
