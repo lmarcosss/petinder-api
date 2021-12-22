@@ -2,17 +2,13 @@ package org.ifrs.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import org.ifrs.enums.AnnouncementStatusEnum;
 import org.ifrs.model.AnnouncementModel;
 

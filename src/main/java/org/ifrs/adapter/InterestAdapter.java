@@ -1,8 +1,9 @@
 package org.ifrs.adapter;
 
-
+import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
 import org.ifrs.model.InterestModel;
+import org.ifrs.view.AnnouncementView;
 import org.ifrs.view.InterestView;
 import org.ifrs.view.UserView;
 
@@ -15,20 +16,19 @@ public class InterestAdapter {
         this.Interested = Interested;
     }
 
-    public InterestView mapEntityToView() {
+    public InterestView mapEntityToView(AnnouncementView announcement) {
         InterestView interestView = new InterestView();
-        
-        AnnouncementAdapter announcement = new AnnouncementAdapter(interest.getAnnouncement(), Interested);
 
         interestView.id = interest.getId();
         interestView.interested = Interested;
-        interestView.announcement = announcement.mapEntityToView();
+        interestView.announcement = announcement;
         interestView.status = interest.getStatus();
 
         return interestView;
     }
 
-    public void mapModelToEntity(InterestModel interestModel) {
+    public void mapModelToEntity(InterestModel interestModel, Announcement announcement) {
+        interest.setAnnouncement(announcement);
         interest.setInterestedId(interestModel.interestedId);
     }
 

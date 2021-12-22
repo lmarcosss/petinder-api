@@ -1,7 +1,6 @@
 package org.ifrs.adapter;
 
 import java.util.stream.Collectors;
-
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Picture;
 import org.ifrs.model.AnnouncementModel;
