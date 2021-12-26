@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+
 import org.ifrs.auth.TokenUtils;
 import org.ifrs.entity.Error;
 import org.ifrs.model.AnnouncementModel;
@@ -26,13 +27,14 @@ public class AnnouncementController {
     @Inject
     JsonWebToken token;
 
-    AnnouncementService announcementService = new AnnouncementService();
-    
+    @Inject
+    AnnouncementService announcementService;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAll() {
         try {
-            return Response.ok(announcementService.getAll()).build();
+            return Response.ok(announcementService.getAllOpenned()).build();
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);
         }

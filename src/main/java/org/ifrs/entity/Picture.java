@@ -21,7 +21,4 @@ public class Picture extends BaseEntity<Object> {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    @Override
-    public void mapFromEntity(Object model) {}
 }

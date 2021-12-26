@@ -1,5 +1,6 @@
 package org.ifrs.controller;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
@@ -17,7 +18,8 @@ import org.ifrs.service.InterestService;
 
 @Path("interest")
 public class InterestController {
-    InterestService interestService = new InterestService();
+    @Inject
+    InterestService interestService;
     
     @GET
     @Path("{id}")

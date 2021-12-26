@@ -1,40 +1,85 @@
 package org.ifrs.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.ifrs.adapter.AnnouncementAdapter;
+import org.ifrs.adapter.InterestAdapter;
+import org.ifrs.client.UserClient;
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.enums.InterestStatusEnum;
 import org.ifrs.model.InterestModel;
+import org.ifrs.view.AnnouncementView;
+import org.ifrs.view.InterestView;
+import org.ifrs.view.UserView;
 
+@Singleton
 public class InterestService {
-    // UserService userService = new UserService();
-    AnnouncementService announcementService = new AnnouncementService();
+    @Inject
+    AnnouncementService announcementService;
 
-    public Interest getById(Long userId) {
-        Interest findedInterest = Interest.findById(userId);
+    @Inject
+    @RestClient
+    UserClient userService;
+
+    private InterestView formatAnnouncement(Interest interest) {
+        UserView interested = userService.getById(interest.getInterestedId());
+
+        UserView owner = userService.getById(interest.getAnnouncement().getOwnerId());
+
+        AnnouncementView announcementView = new AnnouncementAdapter(interest.getAnnouncement(), owner).mapEntityToView();
+
+        InterestAdapter adapter = new InterestAdapter(interest, interested);
+        
+        return adapter.mapEntityToView(announcementView);
+    }
+
+    private List<InterestView> formatInterests(List<Interest> interests) {
+        return interests.stream().map(interest -> formatAnnouncement(interest)).collect(Collectors.toList());
+    }
+
+    public InterestView getById(Long id) {
+        Interest findedInterest = Interest.findById(id);
 
         if (findedInterest == null) {
             throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
         }
 
-        return findedInterest;
+        InterestView interestFormatted = formatAnnouncement(findedInterest);
+
+        return interestFormatted;
     }
 
-    public Interest create(InterestModel interest) {
-        // User findedUser = userService.getById(interest.interestedId);
-        Announcement findedAnnouncement = announcementService.getById(interest.announcementId);
+    public InterestView create(InterestModel interest) {
+        Announcement findedAnnouncement = Announcement.findById(interest.announcementId);
 
-        // if (findedAnnouncement.getOwner() == findedUser) {
-        //     throw new BadRequestException(ErrorsEnum.INTEREST_ANNOUNCEMENT_BAD_REQUEST.getError());
-        // }
+        if (findedAnnouncement == null) {
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
+        }
+
+        UserView interested = userService.getById(interest.interestedId);
+
+        if (interested == null) {
+            throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
+        }
+
+        UserView owner = userService.getById(findedAnnouncement.getOwnerId());
+
+        if (owner.id == interested.id) {
+            throw new BadRequestException(ErrorsEnum.INTEREST_ANNOUNCEMENT_BAD_REQUEST.getError());
+        }
 
         Interest findedInterest = Interest.find(
             "interestedId = ?1 and announcementId = ?2",
-            interest.interestedId,
+            interested.id,
             findedAnnouncement.getId()
         ).firstResult();
 
@@ -44,33 +89,41 @@ public class InterestService {
         
         Interest newInterest = new Interest();
 
-        newInterest.setInterestedId(interest.interestedId);
+        AnnouncementView announcementView = new AnnouncementAdapter(findedAnnouncement, owner).mapEntityToView();
 
-        newInterest.setAnnouncement(findedAnnouncement);
+        InterestAdapter adapter = new InterestAdapter(newInterest, interested);
 
-        Interest.persist(newInterest);
+        adapter.mapModelToEntity(interest, findedAnnouncement);
 
-        return newInterest;
+        Interest.persist(adapter.getInterest());
+
+        return adapter.mapEntityToView(announcementView);
     }
 
-    public List<Interest> getInterestsByAnnouncement(Long announcementId) {
-        Announcement findedAnnouncement = announcementService.getById(announcementId);
+    public List<InterestView> getInterestsByAnnouncement(Long announcementId) {
+        Announcement findedAnnouncement = Announcement.findById(announcementId);
+
+        if (findedAnnouncement == null) {
+            throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
+        }
 
         List<Interest> interests = Interest.find("announcement", findedAnnouncement).list();
 
-        return interests;
+        return formatInterests(interests);
     }
 
-    public List<Interest> getUserInterests(Long userId) {
-        // User findedUser = userService.getById(userId);
-
+    public List<InterestView> getUserInterests(Long userId) {
         List<Interest> interests = Interest.find("interestedId", userId).list();
 
-        return interests;
+        return formatInterests(interests);
     }
 
     public void acceptInterestByAnnoucement(Long id) {
-        Interest findedInterest = this.getById(id);
+        Interest findedInterest = Interest.findById(id);
+
+        if (findedInterest == null) {
+            throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
+        }
 
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
@@ -80,7 +133,11 @@ public class InterestService {
     }
 
     public void declineInterestByAnnoucement(Long id) {
-        Interest findedInterest = this.getById(id);
+        Interest findedInterest = Interest.findById(id);
+
+        if (findedInterest == null) {
+            throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
+        }
 
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
