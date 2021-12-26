@@ -1,5 +1,6 @@
 package org.ifrs.controller;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
@@ -14,12 +15,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.ifrs.auth.TokenUtils;
 import org.ifrs.entity.Error;
 import org.ifrs.model.AnnouncementModel;
 import org.ifrs.service.AnnouncementService;
 
 @Path("announcement")
 public class AnnouncementController {
+    @Inject
+    JsonWebToken token;
+
     AnnouncementService announcementService = new AnnouncementService();
     
     @GET
@@ -84,9 +90,22 @@ public class AnnouncementController {
     }
 
     @GET
+    @Path("user")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAnnouncements() {
+        try {
+            Long userId = TokenUtils.getUserId(token);
+
+            return Response.ok(announcementService.getUserAnnouncements(userId)).build();
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
+    }
+
+    @GET
     @Path("user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserAnnouncements(@PathParam("userId") Long userId) {
+    public Response getUserAnnouncementsById(@PathParam("userId") Long userId) {
         try {
             return Response.ok(announcementService.getUserAnnouncements(userId)).build();
         } catch (ClientErrorException e) {
