@@ -1,5 +1,6 @@
 package org.ifrs.controller;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -94,6 +95,7 @@ public class AnnouncementController {
     @GET
     @Path("user")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "User" })
     public Response getUserAnnouncements() {
         try {
             Long userId = TokenUtils.getUserId(token);
