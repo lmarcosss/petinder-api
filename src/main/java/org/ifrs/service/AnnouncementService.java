@@ -5,17 +5,20 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.NotFoundException;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.ifrs.adapter.AnnouncementAdapter;
+import org.ifrs.client.GeolocationClient;
 import org.ifrs.client.UserClient;
 import org.ifrs.entity.Announcement;
 import org.ifrs.enums.AnnouncementStatusEnum;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.model.AnnouncementModel;
+import org.ifrs.model.GeolocationModel;
 import org.ifrs.view.AnnouncementView;
 import org.ifrs.view.UserView;
 
@@ -24,6 +27,16 @@ public class AnnouncementService {
     @Inject
     @RestClient
     UserClient userService;
+
+    @Inject
+    @RestClient
+    GeolocationClient geolocationService;
+
+    private GeolocationModel getGeolocation(double lat, double lon) {
+        String apiKey = ConfigProvider.getConfig().getValue("petinder.locationiq-api-key", String.class);
+
+        return geolocationService.getGeolocation(apiKey, lat, lon, "pt-br", 10, "json");
+    }
 
     private AnnouncementView formatAnnouncement(Announcement announcement) {
         UserView owner = userService.getById(announcement.getOwnerId());
@@ -61,22 +74,24 @@ public class AnnouncementService {
         return announcement.mapEntityToView();
     }
 
-    public void update(Long id, AnnouncementModel announcement) {
+    public void update(Long id, AnnouncementModel announcementModel) {
         Announcement findedAnnouncement = Announcement.findById(id);
 
         if (findedAnnouncement == null) {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
 
-        UserView owner = userService.getById(announcement.userId);
+        UserView owner = userService.getById(announcementModel.userId);
 
         if (owner == null) {
             throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
         }
 
+        GeolocationModel geolocationModel = getGeolocation(announcementModel.latitude, announcementModel.longitude);
+
         AnnouncementAdapter adapter = new AnnouncementAdapter(findedAnnouncement, owner);
 
-        adapter.mapModelToEntity(announcement);
+        adapter.mapModelToEntity(announcementModel, geolocationModel);
 
         Announcement.persist(adapter.getAnnouncement());
     }
@@ -88,11 +103,13 @@ public class AnnouncementService {
             throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
         }
 
+        GeolocationModel geolocationModel = getGeolocation(announcementModel.latitude, announcementModel.longitude);
+
         Announcement newAnnouncement = new Announcement();
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement, owner);
 
-        adapter.mapModelToEntity(announcementModel);
+        adapter.mapModelToEntity(announcementModel, geolocationModel);
         
         Announcement.persist(adapter.getAnnouncement());
 

@@ -9,8 +9,8 @@ public class AnnouncementView {
     public String title;
     public String description;
     public UserView owner;
-    public double latitude;
-    public double longitude;
+    public String city;
+    public String state;
     public List<Picture> pictures;
     public String status;
     public boolean isClosed;

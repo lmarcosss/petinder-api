@@ -15,10 +15,10 @@ import org.ifrs.model.AnnouncementModel;
 @Entity
 public class Announcement extends BaseEntity<AnnouncementModel> {
     @Basic(optional = false)
-    private double longitude;
+    private String city;
     
     @Basic(optional = false)
-    private double latitude;
+    private String state;
 
     @Basic(optional = false)
     private String title;
@@ -60,20 +60,20 @@ public class Announcement extends BaseEntity<AnnouncementModel> {
         this.pictures = pictures;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public String getCity() {
+        return city;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getState() {
+        return state;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getTitle() {

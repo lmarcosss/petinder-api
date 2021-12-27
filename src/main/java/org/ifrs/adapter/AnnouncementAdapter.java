@@ -1,9 +1,12 @@
 package org.ifrs.adapter;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Picture;
 import org.ifrs.model.AnnouncementModel;
+import org.ifrs.model.GeolocationModel;
 import org.ifrs.view.AnnouncementView;
 import org.ifrs.view.UserView;
 
@@ -22,8 +25,8 @@ public class AnnouncementAdapter {
         announcementView.id = announcement.getId();
         announcementView.title = announcement.getTitle();
         announcementView.description = announcement.getDescription();
-        announcementView.latitude = announcement.getLatitude();
-        announcementView.longitude = announcement.getLongitude();
+        announcementView.city = announcement.getCity();
+        announcementView.state = announcement.getState();
         announcementView.pictures = announcement.getPictures();
         announcementView.status = announcement.getStatus();
         announcementView.isClosed = announcement.isClosed();
@@ -32,11 +35,16 @@ public class AnnouncementAdapter {
         return announcementView;
     }
 
-    public void mapModelToEntity(AnnouncementModel announcementModel) {
+    public void mapModelToEntity(AnnouncementModel announcementModel, GeolocationModel geolocationModel) {
+        String city = Stream.of(geolocationModel.getCity(), geolocationModel.getTown(), geolocationModel.getVillage())
+            .filter(location -> location != null)
+            .findFirst()
+            .orElse("");
+
         announcement.setDescription(announcementModel.description);
         announcement.setTitle(announcementModel.title);
-        announcement.setLatitude(announcementModel.latitude);
-        announcement.setLongitude(announcementModel.longitude);
+        announcement.setCity(city);
+        announcement.setState(geolocationModel.address.state);
         announcement.setOwnerId(announcementModel.userId);
         announcement.setPictures(announcementModel.pictures.stream().map(url -> new Picture(url)).collect(Collectors.toList()));
     }
