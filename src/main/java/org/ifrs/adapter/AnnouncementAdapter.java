@@ -35,7 +35,7 @@ public class AnnouncementAdapter {
         return announcementView;
     }
 
-    public void mapModelToEntity(AnnouncementModel announcementModel, GeolocationModel geolocationModel) {
+    public void mapModelToEntity(AnnouncementModel announcementModel, GeolocationModel geolocationModel, Long ownerId) {
         String city = Stream.of(geolocationModel.getCity(), geolocationModel.getTown(), geolocationModel.getVillage())
             .filter(location -> location != null)
             .findFirst()
@@ -45,7 +45,7 @@ public class AnnouncementAdapter {
         announcement.setTitle(announcementModel.title);
         announcement.setCity(city);
         announcement.setState(geolocationModel.address.state);
-        announcement.setOwnerId(announcementModel.userId);
+        announcement.setOwnerId(ownerId);
         announcement.setPictures(announcementModel.pictures.stream().map(url -> new Picture(url)).collect(Collectors.toList()));
     }
 

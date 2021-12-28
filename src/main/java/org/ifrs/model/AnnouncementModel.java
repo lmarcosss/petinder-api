@@ -16,9 +16,6 @@ public class AnnouncementModel {
     @NotNull(message = "Campo description é obrigatório")
     public String description;
 
-    @NotNull(message = "Campo userId é obrigatório")
-    public Long userId;
-
     @NotNull(message = "Campo pictures é obrigatório")
     public List<String> pictures;
 }

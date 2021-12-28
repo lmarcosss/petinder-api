@@ -74,14 +74,14 @@ public class AnnouncementService {
         return announcement.mapEntityToView();
     }
 
-    public void update(Long id, AnnouncementModel announcementModel) {
+    public void update(Long id, AnnouncementModel announcementModel, Long userId) {
         Announcement findedAnnouncement = Announcement.findById(id);
 
         if (findedAnnouncement == null) {
             throw new NotFoundException(ErrorsEnum.ANNOUNCEMENT_NOT_FOUND.getError());
         }
 
-        UserView owner = userService.getById(announcementModel.userId);
+        UserView owner = userService.getById(userId);
 
         if (owner == null) {
             throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
@@ -91,13 +91,13 @@ public class AnnouncementService {
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(findedAnnouncement, owner);
 
-        adapter.mapModelToEntity(announcementModel, geolocationModel);
+        adapter.mapModelToEntity(announcementModel, geolocationModel, userId);
 
         Announcement.persist(adapter.getAnnouncement());
     }
 
-    public AnnouncementView create(AnnouncementModel announcementModel) {
-        UserView owner = userService.getById(announcementModel.userId);
+    public AnnouncementView create(AnnouncementModel announcementModel, Long userId) {
+        UserView owner = userService.getById(userId);
 
         if (owner == null) {
             throw new NotFoundException(ErrorsEnum.USER_NOT_FOUND.getError());
@@ -109,7 +109,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(newAnnouncement, owner);
 
-        adapter.mapModelToEntity(announcementModel, geolocationModel);
+        adapter.mapModelToEntity(announcementModel, geolocationModel, userId);
         
         Announcement.persist(adapter.getAnnouncement());
 

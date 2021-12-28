@@ -59,7 +59,9 @@ public class AnnouncementController {
     @RolesAllowed({ "User" })
     public Response create(@Valid AnnouncementModel announcement) {
         try {
-            return Response.ok(announcementService.create(announcement)).build();
+            Long userId = TokenUtils.getUserId(token);
+
+            return Response.ok(announcementService.create(announcement, userId)).build();
         } catch (ClientErrorException e) {
             return new Error().toResponse(e);
         }
@@ -72,7 +74,9 @@ public class AnnouncementController {
     @RolesAllowed({ "User" })
     public Response update(@PathParam("id") Long id, @Valid AnnouncementModel announcement) {
         try {
-            announcementService.update(id, announcement);
+            Long userId = TokenUtils.getUserId(token);
+
+            announcementService.update(id, announcement, userId);
 
             return Response.ok().build();
         } catch (ClientErrorException e) {
@@ -109,17 +113,7 @@ public class AnnouncementController {
         }
     }
 
-    @GET
-    @Path("user/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserAnnouncementsById(@PathParam("userId") Long userId) {
-        try {
-            return Response.ok(announcementService.getUserAnnouncements(userId)).build();
-        } catch (ClientErrorException e) {
-            return new Error().toResponse(e);
-        }
-    }
-
+ 
     @POST
     @Path("{id}/cancel")
     @RolesAllowed({ "User" })
