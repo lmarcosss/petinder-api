@@ -56,6 +56,7 @@ public class AnnouncementController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
+    @RolesAllowed({ "User" })
     public Response create(@Valid AnnouncementModel announcement) {
         try {
             return Response.ok(announcementService.create(announcement)).build();
@@ -68,6 +69,7 @@ public class AnnouncementController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
+    @RolesAllowed({ "User" })
     public Response update(@PathParam("id") Long id, @Valid AnnouncementModel announcement) {
         try {
             announcementService.update(id, announcement);
@@ -82,6 +84,7 @@ public class AnnouncementController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
+    @RolesAllowed({ "User" })
     public Response update(@PathParam("id") Long id) {
         try {
             announcementService.delete(id);
@@ -119,6 +122,7 @@ public class AnnouncementController {
 
     @POST
     @Path("{id}/cancel")
+    @RolesAllowed({ "User" })
     @Transactional
     public Response cancelAnnouncement(@PathParam("id") Long id) {
         try {
@@ -132,6 +136,7 @@ public class AnnouncementController {
 
     @POST
     @Path("{id}/adopt")
+    @RolesAllowed({ "User" })
     @Transactional
     public Response finishAnnouncement(@PathParam("id") Long id) {
         try {
