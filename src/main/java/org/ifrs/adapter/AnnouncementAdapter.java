@@ -19,7 +19,7 @@ public class AnnouncementAdapter {
         this.owner = owner;
     }
 
-    public AnnouncementView mapEntityToView() {
+    public AnnouncementView mapEntityToView(String interestStatus) {
         AnnouncementView announcementView = new AnnouncementView();
 
         announcementView.id = announcement.getId();
@@ -31,6 +31,7 @@ public class AnnouncementAdapter {
         announcementView.status = announcement.getStatus();
         announcementView.isClosed = announcement.isClosed();
         announcementView.owner = owner;
+        announcementView.interestStatus = interestStatus;
 
         return announcementView;
     }

@@ -35,7 +35,7 @@ public class InterestService {
 
         UserView owner = userService.getById(interest.getAnnouncement().getOwnerId());
 
-        AnnouncementView announcementView = new AnnouncementAdapter(interest.getAnnouncement(), owner).mapEntityToView();
+        AnnouncementView announcementView = new AnnouncementAdapter(interest.getAnnouncement(), owner).mapEntityToView(null);
 
         InterestAdapter adapter = new InterestAdapter(interest, interested);
         
@@ -89,7 +89,7 @@ public class InterestService {
         
         Interest newInterest = new Interest();
 
-        AnnouncementView announcementView = new AnnouncementAdapter(findedAnnouncement, owner).mapEntityToView();
+        AnnouncementView announcementView = new AnnouncementAdapter(findedAnnouncement, owner).mapEntityToView(null);
 
         InterestAdapter adapter = new InterestAdapter(newInterest, interested);
 

@@ -42,6 +42,20 @@ public class AnnouncementController {
     }
 
     @GET
+    @Path("logged")
+    @RolesAllowed({ "User" })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listAllLogged() {
+        try {
+            Long userId = TokenUtils.getUserId(token);
+
+            return Response.ok(announcementService.getAllOpennedLogged(userId)).build();
+        } catch (ClientErrorException e) {
+            return new Error().toResponse(e);
+        }
+    }
+
+    @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") Long id) {

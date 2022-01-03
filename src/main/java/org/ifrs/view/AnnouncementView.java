@@ -14,4 +14,5 @@ public class AnnouncementView {
     public List<Picture> pictures;
     public String status;
     public boolean isClosed;
+    public String interestStatus;
 }
