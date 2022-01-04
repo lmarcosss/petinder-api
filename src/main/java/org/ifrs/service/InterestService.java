@@ -7,10 +7,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ForbiddenException;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.ifrs.adapter.AnnouncementAdapter;
 import org.ifrs.adapter.InterestAdapter;
+import org.ifrs.auth.TokenUtils;
 import org.ifrs.client.UserClient;
 import org.ifrs.entity.Announcement;
 import org.ifrs.entity.Interest;
@@ -29,6 +32,17 @@ public class InterestService {
     @Inject
     @RestClient
     UserClient userService;
+
+    @Inject
+    JsonWebToken token;
+
+    private void validateAnnouncementOwner(Announcement announcement) {
+        Long loggedUserId = TokenUtils.getUserId(token);
+
+        if (announcement.getOwnerId() != loggedUserId) {
+            throw new ForbiddenException(ErrorsEnum.UNAUTHORIZED_USER_ANNOUNCEMENT.getError());
+        }
+    }
 
     private InterestView formatAnnouncement(Interest interest) {
         UserView interested = userService.getById(interest.getInterestedId());
@@ -125,6 +139,8 @@ public class InterestService {
             throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
         }
 
+        this.validateAnnouncementOwner(findedInterest.getAnnouncement());
+
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
         findedInterest.setStatus(InterestStatusEnum.ACCEPTED.getStatus());
@@ -138,6 +154,7 @@ public class InterestService {
         if (findedInterest == null) {
             throw new NotFoundException(ErrorsEnum.INTEREST_NOT_FOUND.getError());
         }
+        this.validateAnnouncementOwner(findedInterest.getAnnouncement());
 
         this.verifyStatusIfNotOpenned(findedInterest.getStatus());
 
