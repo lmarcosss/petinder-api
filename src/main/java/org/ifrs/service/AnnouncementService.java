@@ -10,7 +10,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.stream.Collectors;
 
 import org.ifrs.adapter.AnnouncementAdapter;
 import org.ifrs.client.GeolocationClient;
@@ -47,7 +46,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(announcement, owner);
         
-        return adapter.mapEntityToView(null);
+        return adapter.mapEntityToView(null, null);
     }
 
     private List<AnnouncementView> formatAnnouncements(List<Announcement> announcements) {
@@ -73,11 +72,11 @@ public class AnnouncementService {
 
         String interestStatus = interest != null ? interest.getStatus() : null;
 
-        UserView owner = userService.getById(userId);
+        UserView owner = userService.getById(announcement.getOwnerId());
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(announcement, owner);
 
-        return adapter.mapEntityToView(interestStatus);
+        return adapter.mapEntityToView(interestStatus, userId);
     }
 
     public List<AnnouncementView> getAllOpennedLogged(Long userId) {
@@ -110,7 +109,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter announcement = new AnnouncementAdapter(findedAnnouncement, owner);
 
-        return announcement.mapEntityToView(null);
+        return announcement.mapEntityToView(null, null);
     }
 
     public void update(Long id, AnnouncementModel announcementModel, Long userId) {
@@ -152,7 +151,7 @@ public class AnnouncementService {
         
         Announcement.persist(adapter.getAnnouncement());
 
-        return adapter.mapEntityToView(null);
+        return adapter.mapEntityToView(null, null);
     }
 
     public void delete(Long id) {

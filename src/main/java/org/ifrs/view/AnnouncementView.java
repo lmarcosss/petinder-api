@@ -15,4 +15,5 @@ public class AnnouncementView {
     public String status;
     public boolean isClosed;
     public String interestStatus;
+    public boolean isMyAnnouncement;
 }
