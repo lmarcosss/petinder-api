@@ -10,17 +10,21 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.stream.Collectors;
 
 import org.ifrs.adapter.AnnouncementAdapter;
 import org.ifrs.client.GeolocationClient;
 import org.ifrs.client.UserClient;
 import org.ifrs.entity.Announcement;
+import org.ifrs.entity.Interest;
 import org.ifrs.enums.AnnouncementStatusEnum;
 import org.ifrs.enums.ErrorsEnum;
 import org.ifrs.model.AnnouncementModel;
 import org.ifrs.model.GeolocationModel;
 import org.ifrs.view.AnnouncementView;
 import org.ifrs.view.UserView;
+
+import io.quarkus.panache.common.Sort;
 
 @Singleton
 public class AnnouncementService {
@@ -43,7 +47,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter adapter = new AnnouncementAdapter(announcement, owner);
         
-        return adapter.mapEntityToView();
+        return adapter.mapEntityToView(null);
     }
 
     private List<AnnouncementView> formatAnnouncements(List<Announcement> announcements) {
@@ -51,9 +55,44 @@ public class AnnouncementService {
     }
     
     public List<AnnouncementView> getAllOpenned() {
-        List<Announcement> announcements = Announcement.find("status", AnnouncementStatusEnum.OPENNED.getStatus()).list();
+        List<Announcement> announcements = Announcement.find(
+            "status",
+            Sort.by("id").descending(),
+            AnnouncementStatusEnum.OPENNED.getStatus()
+        ).list();
         
         return formatAnnouncements(announcements);
+    }
+
+    public AnnouncementView formatAnnouncement(Announcement announcement, Long userId) {
+       Interest interest = Interest.find(
+           "interestedId = ?1 and announcementId = ?2",
+           userId,  
+           announcement.getId()
+        ).firstResult();
+
+        String interestStatus = interest != null ? interest.getStatus() : null;
+
+        UserView owner = userService.getById(userId);
+
+        AnnouncementAdapter adapter = new AnnouncementAdapter(announcement, owner);
+
+        return adapter.mapEntityToView(interestStatus);
+    }
+
+    public List<AnnouncementView> getAllOpennedLogged(Long userId) {
+
+        List<Announcement> announcements = Announcement.find(
+            "status",
+            Sort.by("id").descending(),
+            AnnouncementStatusEnum.OPENNED.getStatus()
+        ).list();
+
+        List<AnnouncementView> filteredAnnouncements = announcements.stream().map(
+            announcement -> formatAnnouncement(announcement, userId)
+        ).collect(Collectors.toList()); 
+        
+        return filteredAnnouncements;
     }
      
     public AnnouncementView getById(Long id) {
@@ -71,7 +110,7 @@ public class AnnouncementService {
 
         AnnouncementAdapter announcement = new AnnouncementAdapter(findedAnnouncement, owner);
 
-        return announcement.mapEntityToView();
+        return announcement.mapEntityToView(null);
     }
 
     public void update(Long id, AnnouncementModel announcementModel, Long userId) {
@@ -113,7 +152,7 @@ public class AnnouncementService {
         
         Announcement.persist(adapter.getAnnouncement());
 
-        return adapter.mapEntityToView();
+        return adapter.mapEntityToView(null);
     }
 
     public void delete(Long id) {
